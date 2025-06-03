@@ -1,0 +1,33 @@
+src/
+│
+├── app/                  # Interface e execução principal
+│   └── Main.java
+│
+├── controller/           # Controladores e fluxo de dados
+│   └── DocumentController.java
+│
+├── model/                # Sistema_de_Doc.Estruturas de dados e algoritmos
+│   ├── compression/
+│   │   └── HuffmanCompressor.java
+│   ├── indexing/
+│   │   ├── InvertedIndex.java
+│   │   ├── BPlusTree.java (simulada)
+│   │   └── SuffixArray.java
+│   ├── sorting/
+│   │   ├── MergeSort.java
+│   │   ├── QuickSort.java
+│   │   └── HeapSort.java
+│   ├── structure/
+│   │   ├── AVLTree.java
+│   │   ├── RedBlackTree.java
+│   │   └── BTree.java
+│   └── Document.java
+│
+├── persistence/          # Leitura e gravação de arquivos
+│   └── FileManager.java
+│
+├── util/                 # Medição de tempo e memória
+│   └── PerformanceAnalyzer.java
+│
+└── test/                 # Sistema_de_Doc.Testes com JUnit
+    └── DocumentTest.java
