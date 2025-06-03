@@ -21,7 +21,7 @@ public class ListaDocumento {
     public void listarDocumentos() {
         NoDocumento atual = inicio;
         while (atual != null) {
-            System.out.println("Documento: " + atual.documento.getTitulo());
+            System.out.println("Documento: " + atual.documento.getNome());
             atual = atual.proximo;
         }
     }
@@ -29,7 +29,7 @@ public class ListaDocumento {
     public Documento buscarPorNome (String titulo) {
         NoDocumento atual = inicio;
         while (atual != null){
-            if(atual.documento.getTitulo().equals(titulo)){
+            if(atual.documento.getNome().equals(titulo)){
                 return atual.documento;
             }
             atual = atual.proximo;
