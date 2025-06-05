@@ -1,0 +1,61 @@
+
+PROJETO: Sistema de Gerenciamento de Documentos
+
+========================================
+1. COMO EXECUTAR O PROJETO
+========================================
+
+Interface Gráfica (GUI - Swing):
+→ Execute a classe:
+   src/Sistema_de_Doc/App/TelaPrincipal.java
+
+Interface em Linha de Comando (CLI):
+→ Execute a classe:
+   src/Sistema_de_Doc/App/Main.java
+
+========================================
+2. FUNCIONALIDADES IMPLEMENTADAS
+========================================
+
+✔ Adicionar documentos com nome e conteúdo
+✔ Listar documentos adicionados
+✔ Ordenar documentos por nome
+✔ Comprimir conteúdo de documento com Huffman
+✔ Buscar palavras dentro dos documentos
+✔ Árvore AVL com busca recursiva (recursão explícita)
+✔ Armazenamento em arquivos `.txt` e `.huff` na pasta `documentos/`
+
+========================================
+3. TESTES AUTOMATIZADOS COM JUNIT
+========================================
+
+Todos os testes estão na pasta:
+   testes/Sistema_de_Doc/
+
+Foram criadas 5 classes de teste:
+
+✔ DocumentoTest.java
+✔ GerenciadorDeArquivosTest.java
+✔ HuffmanCompressorTest.java
+✔ SistemaTest.java
+✔ AVLTreeTest.java → contém uso explícito de recursão
+
+Todos os testes passaram com sucesso.
+
+========================================
+4. PASTAS E ARQUIVOS IMPORTANTES
+========================================
+
+- /src/ → Código-fonte do projeto
+- /testes/ → Testes com JUnit 5
+- /documentos/ → Onde os arquivos .txt e .huff são salvos
+- Estrutura-de-dados-A3.iml → Arquivo do projeto IntelliJ
+- README.txt → Este arquivo
+
+========================================
+5. OBSERVAÇÕES
+========================================
+
+- O método de compressão está na classe: HuffmanCompressor.java
+- A estrutura de árvore AVL utiliza busca recursiva para atender ao requisito 5.3
+- O projeto está estruturado em pacotes por responsabilidade (App, Documentos, Compressao, Estruturas, etc.)
