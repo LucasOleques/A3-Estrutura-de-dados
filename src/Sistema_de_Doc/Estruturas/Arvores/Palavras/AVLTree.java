@@ -113,4 +113,17 @@ public class AVLTree {
             imprimir(no.direita);
         }
     }
+
+    public boolean buscar(String palavra) {
+        return buscarRec(palavra, raiz);
+    }
+
+    private boolean buscarRec(String palavra, Node atual) {
+        if (atual == null) return false;
+        int cmp = palavra.compareToIgnoreCase(atual.palavra);
+        if (cmp == 0) return true;
+        else if (cmp < 0) return buscarRec(palavra, atual.esquerda);
+        else return buscarRec(palavra, atual.direita);
+    }
+
 }

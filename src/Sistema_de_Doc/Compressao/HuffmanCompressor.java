@@ -66,4 +66,10 @@ public class HuffmanCompressor {
             System.err.println("Erro ao salvar arquivo comprimido: " + e.getMessage());
         }
     }
+
+    public static String comprimir(String texto) {
+        HuffmanCompressor compressor = new HuffmanCompressor();
+        return compressor.codificar(texto);
+    }
+
 }
