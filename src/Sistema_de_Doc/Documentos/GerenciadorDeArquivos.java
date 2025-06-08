@@ -37,13 +37,30 @@ public class GerenciadorDeArquivos {
     }
 
     public String obterListaDocumentos() {
-        if (documentos.isEmpty()) {
-            return "Nenhum documento encontrado.";
-        }
-
+        File doc1 = new File(DIRETORIO_BASE);
         StringBuilder sb = new StringBuilder();
-        for (Documento doc : documentos) {
-            sb.append("Nome: ").append(doc.getNome()).append("\n");
+                                                    
+        if (doc1.exists() && doc1.isDirectory()) {
+            File[] arquivos = doc1.listFiles();            //obter documentos em disco
+            if (arquivos != null) { 
+                for (File temp : arquivos) {
+                    String nome = temp.getName();
+                    if (nome.endsWith(".txt")) nome = nome.substring(0, nome.length() - 4);  //pra remover o txt
+                    sb.append("Nome: ").append(nome).append("\n");
+                }
+            }
+        }
+        else return "\nNenhum documento encontrado.";
+                                                   
+        if (documentos.isEmpty()) {
+            sb.append("Nenhum documento recém criado.");    //obter documentos em memoria
+        }
+        else {
+            sb.append("\nDocumento recém criado.");
+            for (Documento doc2 : documentos) {
+                sb.append("\nDocumento recém criado.");
+                sb.append("Nome: ").append(doc2.getNome()).append("\n");
+            }
         }
         return sb.toString();
     }
