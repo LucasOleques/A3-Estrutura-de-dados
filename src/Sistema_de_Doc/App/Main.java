@@ -1,5 +1,6 @@
 package Sistema_de_Doc.App;
 
+import Sistema_de_Doc.Compressao.HuffmanDecompressor;
 import Sistema_de_Doc.Documentos.Documento;
 import Sistema_de_Doc.Documentos.GerenciadorDeArquivos;
 import Sistema_de_Doc.Compressao.HuffmanCompressor;
@@ -7,6 +8,8 @@ import Sistema_de_Doc.Persistencia.IndiceSimuladoBMais;
 
 
 import java.util.Scanner;
+
+import static Sistema_de_Doc.Compressao.HuffmanCompressor.comprimir;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,7 +35,6 @@ public class Main {
                 continue;
             }
 
-
             switch (opcao) {
                 case 1:
                     System.out.print("Nome do documento: ");
@@ -56,20 +58,57 @@ public class Main {
 
                 case 3:
                     gerenciador.ordenarDocumentosPorNome();
-                    System.out.println("Documentos ordenados por nome.");
                     break;
 
                 case 4:
-                    System.out.print("Nome do documento a comprimir: ");
-                    String nomeDoc = scanner.nextLine();
-                    Documento docComprimir = gerenciador.buscarDocumento(nomeDoc);
-                    if (docComprimir != null) {
-                        String comprimido = HuffmanCompressor.comprimir(docComprimir.getConteudo());
-                        System.out.println("Conteúdo comprimido: " + comprimido);
-                    } else {
-                        System.out.println("Documento não encontrado.");
+
+                    while (true) {
+                        int opcao2;
+
+                        System.out.println("- Qual opção deseja?");
+                        System.out.println("1- Compactar o Arquivo");
+                        System.out.println("2- Descompactar o Arquivo");
+                        scanner.nextLine();
+
+                        try {
+                            opcao2 = Integer.parseInt(scanner.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Entrada inválida. Digite um número.");
+                            continue;
+                        }
+
+                        if (opcao2 == 1) {
+                            System.out.print("Nome do documento a comprimir: ");
+                            String nomeDoc = scanner.nextLine();
+                            Documento docComprimir = gerenciador.buscarDocumento(nomeDoc);
+                            if (docComprimir != null) {
+                                HuffmanCompressor compressor = new HuffmanCompressor();
+                                String conteudoComprimido = docComprimir.getConteudo();
+                                String comprimido = compressor.codificar(conteudoComprimido);
+                                System.out.println("Conteúdo comprimido: " + comprimido);
+                                compressor.salvarArquivoCompactado(nomeDoc, conteudoComprimido);
+                            } else {
+                                System.out.println("Documento não encontrado.");
+                            }
+                            break;
+                        } else if (opcao2 == 2) {
+                            HuffmanDecompressor decompressor = new HuffmanDecompressor();
+                            System.out.print("Nome do documento a descomprimir (sem extensão .huff): ");
+                            String nomeDoc = scanner.nextLine();
+                            String nomeArquivoHuff = nomeDoc + ".huff"; // Adiciona a extensão .huff
+                            String textoDescompactado = decompressor.descompactarArquivo(nomeArquivoHuff);
+                            if (textoDescompactado != null) {
+                                System.out.println("Conteúdo descompactado: " + textoDescompactado);
+                                // Salva o texto descompactado em um novo arquivo
+                                decompressor.salvarTextoDescompactado(nomeDoc + "_descompactado.txt", textoDescompactado);
+                            } else {
+                                System.out.println("Erro ao descompactar ou documento não encontrado.");
+                            }
+                            break;
+                        } else {
+                            break;
+                        }
                     }
-                    break;
 
                 case 5:
                     System.out.print("Palavra para buscar: ");
