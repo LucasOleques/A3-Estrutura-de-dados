@@ -61,14 +61,12 @@ public class Main {
                     break;
 
                 case 4:
-
                     while (true) {
                         int opcao2;
 
-                        System.out.println("- Qual opção deseja?");
+                        System.out.println("\nQual opção deseja?");
                         System.out.println("1- Compactar o Arquivo");
                         System.out.println("2- Descompactar o Arquivo");
-                        scanner.nextLine();
 
                         try {
                             opcao2 = Integer.parseInt(scanner.nextLine());
@@ -108,8 +106,9 @@ public class Main {
                         } else {
                             break;
                         }
-                    }
 
+                    }
+                    break;
                 case 5:
                     System.out.print("Palavra para buscar: ");
                     String palavra = scanner.nextLine();
