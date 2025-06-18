@@ -15,16 +15,33 @@ public class Sistema {
         }
     }
 
-    public String listarDocumentos() {
-        return gerenciador.obterListaDocumentos();
+    public StringBuilder listarDocumentos() {
+        //return gerenciador.obterListaDocumentos();
+        return gerenciador.getDocumentos();
     }
 
-    public void ordenarDocumentos() {
-        gerenciador.ordenarDocumentosPorNome();
+    public void ordenarDocumentos(int opcao) {
+        switch (opcao) {
+            case 0:
+                gerenciador.ordenarPorHeap();
+                break;
+            case 1:
+                gerenciador.ordenarPorMerge();
+                break;
+            case 2:
+                gerenciador.ordenarPorQuick();
+                break;
+            case 3:
+                gerenciador.ordenarPorSelection();
+                break;
+            default:
+                break;
+        }
+        //gerenciador.ordenarDocumentosPorNome();
     }
 
-    public Documento buscarDocumento(String nome) {
-        return gerenciador.buscarDocumento(nome);
+    public Documento buscarDocumento(String nome, String tipo) {
+        return gerenciador.buscarDocumento(nome, tipo);
     }
 
     public String buscarPalavra(String palavra) {

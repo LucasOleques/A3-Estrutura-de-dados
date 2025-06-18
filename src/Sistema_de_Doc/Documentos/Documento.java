@@ -13,6 +13,11 @@ public class Documento {
         this.dataCriacao = LocalDateTime.now();
     }
 
+    public Documento(String nome) {
+        this.nome = nome;
+        this.dataCriacao = LocalDateTime.now();
+    }
+
     public String getNome() {
         return nome;
     }

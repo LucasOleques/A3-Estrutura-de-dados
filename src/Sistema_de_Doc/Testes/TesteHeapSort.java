@@ -17,7 +17,7 @@ public class TesteHeapSort {
         System.out.println("Antes da ordenação:");
         resultados.forEach(System.out::println);
 
-        HeapSort.ordenacao(resultados);
+        //HeapSort.ordenacao(resultados);
 
         System.out.println("\nDepois da ordenação por frequência:");
         resultados.forEach(System.out::println);

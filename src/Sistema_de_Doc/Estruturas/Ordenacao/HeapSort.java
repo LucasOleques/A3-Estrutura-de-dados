@@ -1,53 +1,69 @@
 package Sistema_de_Doc.Estruturas.Ordenacao;
 
+import Sistema_de_Doc.Documentos.Documento;
 import Sistema_de_Doc.Indexador.ResultadoBusca;
 
 import java.util.*;
 
-public class HeapSort {
+public class HeapSort{
+    // Metodo principal para ordenar o ArrayList de Documentos
+    public static ArrayList<Documento> heapSort(ArrayList<Documento> documentos) {
+        if (documentos == null || documentos.isEmpty()){
+            System.out.println("Erro: documentos nao pode ser vazio");
+            return null;
+        }
 
-    public static void ordenacao(List<ResultadoBusca> resultados) {
-        int n = resultados.size();
+        int n = documentos.size();
 
-        // Montar max heap
+        // Constrói o max-heap
         for (int i = n / 2 - 1; i >= 0; i--) {
-            heapify(resultados, n, i);
+            heapify(documentos, n, i);
         }
 
-        // Extrair elementos um a um
-        for (int i = n - 1; i >= 0; i--) {
-            Collections.swap(resultados, 0, i); // mover maior para o final
-            heapify(resultados, i, 0); // reconstroi heap
+        // Extrai elementos do heap um a um
+        for (int i = n - 1; i > 0; i--) {
+            // Move a raiz (maior elemento) para o final
+            swap(documentos, 0, i);
+
+            // Chama heapify no heap reduzido
+            heapify(documentos, i, 0);
+        }
+        return documentos;
+    }
+
+    // Metodo para manter a propriedade do max-heap
+    private static void heapify(ArrayList<Documento> documentos, int n, int i) {
+        int largest = i; // Inicializa o maior como raiz
+        int left = 2 * i + 1; // Filho esquerdo
+        int right = 2 * i + 2; // Filho direito
+
+        // Compara o filho esquerdo com a raiz
+        if (left < n && compareDocumentos(documentos.get(left), documentos.get(largest)) > 0) {
+            largest = left;
+        }
+
+        // Compara o filho direito com o maior até agora
+        if (right < n && compareDocumentos(documentos.get(right), documentos.get(largest)) > 0) {
+            largest = right;
+        }
+
+        // Se o maior não for a raiz
+        if (largest != i) {
+            swap(documentos, i, largest);
+            // Recursivamente heapify a subárvore afetada
+            heapify(documentos, n, largest);
         }
     }
 
-    private static void heapify(List<ResultadoBusca> resultados, int n, int i) {
-        int maior = i;
-        int esq = 2 * i + 1;
-        int dir = 2 * i + 2;
-
-        if (esq < n && resultados.get(esq).frequencia > resultados.get(maior).frequencia)
-            maior = esq;
-
-        if (dir < n && resultados.get(dir).frequencia > resultados.get(maior).frequencia)
-            maior = dir;
-
-        if (maior != i) {
-            Collections.swap(resultados, i, maior);
-            heapify(resultados, n, maior);
-        }
+    // Metodo para trocar dois documentos no ArrayList
+    private static void swap(ArrayList<Documento> documentos, int i, int j) {
+        Documento temp = documentos.get(i);
+        documentos.set(i, documentos.get(j));
+        documentos.set(j, temp);
     }
-    public static void ordenacao(int[] array) {
-        List<ResultadoBusca> lista = new ArrayList<>();
-        for (int val : array) {
-            lista.add(new ResultadoBusca("doc", val)); // usa val como frequência fictícia
-        }
 
-        ordenacao(lista); // reutiliza o método existente
-
-        for (int i = 0; i < array.length; i++) {
-            array[i] = lista.get(i).getFrequencia(); // extrai valor ordenado
-        }
+    // Metodo para comparar dois documentos pelo nome
+    private static int compareDocumentos(Documento a, Documento b) {
+        return a.getNome().compareToIgnoreCase(b.getNome());
     }
 }
-

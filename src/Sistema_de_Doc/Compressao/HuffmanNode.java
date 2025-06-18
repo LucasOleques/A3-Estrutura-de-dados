@@ -1,21 +1,31 @@
 package Sistema_de_Doc.Compressao;
 
-public class HuffmanNode implements Comparable<HuffmanNode> {
-    public char caractere;
-    public int frequencia;
-    public HuffmanNode esquerda, direita;
+import java.io.*;
+import java.util.*;
 
-    public HuffmanNode(char caractere, int frequencia) {
-        this.caractere = caractere;
-        this.frequencia = frequencia;
+class HuffmanNode implements Comparable<HuffmanNode> {
+    char character;
+    int frequency;
+    HuffmanNode left, right;
+
+    HuffmanNode(char character, int frequency) {
+        this.character = character;
+        this.frequency = frequency;
     }
 
-    public boolean isFolha() {
-        return esquerda == null && direita == null;
+    HuffmanNode(char character, int frequency, HuffmanNode left, HuffmanNode right) {
+        this.character = character;
+        this.frequency = frequency;
+        this.left = left;
+        this.right = right;
     }
 
     @Override
-    public int compareTo(HuffmanNode outro) {
-        return this.frequencia - outro.frequencia;
+    public int compareTo(HuffmanNode other) {
+        return this.frequency - other.frequency;
+    }
+
+    public boolean isLeaf() {
+        return left == null && right == null;
     }
 }

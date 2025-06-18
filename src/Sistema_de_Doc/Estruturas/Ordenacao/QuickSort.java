@@ -1,29 +1,47 @@
 package Sistema_de_Doc.Estruturas.Ordenacao;
 
-public class QuickSort {
+import Sistema_de_Doc.Documentos.Documento;
 
-    public static void ordenar(int[] arr) {
-        particionar(arr, 0, arr.length - 1);
+import java.util.ArrayList;
+
+public class QuickSort{
+
+    // Metodo principal para chamar o QuickSort
+    public static ArrayList<Documento> ordenarPorDataMaisRecente(ArrayList<Documento> documentos) {
+        if (documentos == null || documentos.size() <= 1) return null;
+
+        quickSort(documentos, 0, documentos.size() - 1);
+        return documentos;
     }
 
-    private static int particionar(int[] arr, int inicio, int fim) {
-        int pivo = arr[fim];
-        int i = inicio - 1;
+    public static void quickSort(ArrayList<Documento> documentos, int low, int high) {
+        if (low < high) {
+            int pi = partition(documentos, low, high);
+            quickSort(documentos, low, pi - 1);
+            quickSort(documentos, pi + 1, high);
+        }
+    }
 
-        for (int j = inicio; j < fim; j++) {
-            if (arr[j] < pivo) {
+    private static int partition(ArrayList<Documento> documentos, int low, int high) {
+        Documento pivot = documentos.get(high);
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            // Compara datas: mais recente vem primeiro
+            if (documentos.get(j).getDataCriacao().isAfter(pivot.getDataCriacao())) {
                 i++;
-                trocar(arr, i, j);
+                // Troca elementos
+                Documento temp = documentos.get(i);
+                documentos.set(i, documentos.get(j));
+                documentos.set(j, temp);
             }
         }
 
-        trocar(arr, i + 1, fim);
-        return i + 1;
-    }
+        // Coloca o pivô na posição correta
+        Documento temp = documentos.get(i + 1);
+        documentos.set(i + 1, documentos.get(high));
+        documentos.set(high, temp);
 
-    private static void trocar(int[] arr, int i, int j) {
-        int aux = arr[i];
-        arr[i] = arr[j];
-        arr[j] = aux;
+        return i + 1;
     }
 }

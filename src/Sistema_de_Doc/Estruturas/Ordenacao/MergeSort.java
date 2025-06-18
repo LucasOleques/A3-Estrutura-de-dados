@@ -1,30 +1,64 @@
 package Sistema_de_Doc.Estruturas.Ordenacao;
 
 
-public class MergeSort {
-    public static void ordenar(int[] arr) {
-        mergeSort(arr, 0, arr.length - 1);
+import Sistema_de_Doc.Documentos.Documento;
+
+import java.util.ArrayList;
+
+public class MergeSort{
+    public static ArrayList<Documento> mergeSort(ArrayList<Documento> lista) {
+        if (lista == null || lista.size() <= 1) {
+            return null;
+        }
+        mergeSortRecursivo(lista, 0, lista.size() - 1);
+        return lista;
     }
 
-    private static void mergeSort(int[] arr, int esq, int dir) {
-        if (esq < dir) {
-            int meio = (esq + dir) / 2;
-            mergeSort(arr, esq, meio);
-            mergeSort(arr, meio + 1, dir);
-            intercalar(arr, esq, meio, dir);
+    private static void mergeSortRecursivo(ArrayList<Documento> lista, int inicio, int fim) {
+        if (inicio < fim) {
+            int meio = (inicio + fim) / 2;
+            mergeSortRecursivo(lista, inicio, meio);
+            mergeSortRecursivo(lista, meio + 1, fim);
+            merge(lista, inicio, meio, fim);
         }
     }
 
-    private static void intercalar(int[] arr, int esq, int meio, int dir) {
-        int[] temp = new int[dir - esq + 1];
-        int i = esq, j = meio + 1, k = 0;
+    private static void merge(ArrayList<Documento> lista, int inicio, int meio, int fim) {
+        ArrayList<Documento> temp = new ArrayList<>();
 
-        while (i <= meio && j <= dir)
-            temp[k++] = (arr[i] <= arr[j]) ? arr[i++] : arr[j++];
+        // Copia os elementos para um array temporário
+        for (int i = inicio; i <= fim; i++) {
+            temp.add(lista.get(i));
+        }
 
-        while (i <= meio) temp[k++] = arr[i++];
-        while (j <= dir) temp[k++] = arr[j++];
+        int i = 0; // Índice para a primeira metade
+        int j = meio - inicio + 1; // Índice para a segunda metade
+        int k = inicio; // Índice para a lista original
 
-        System.arraycopy(temp, 0, arr, esq, temp.length);
+        // Mescla as duas metades ordenando pelo tamanho do conteúdo
+        while (i <= meio - inicio && j <= fim - inicio) {
+            if (temp.get(i).getConteudo().length() <= temp.get(j).getConteudo().length()) {
+                lista.set(k, temp.get(i));
+                i++;
+            } else {
+                lista.set(k, temp.get(j));
+                j++;
+            }
+            k++;
+        }
+
+        // Copia os elementos restantes da primeira metade, se houver
+        while (i <= meio - inicio) {
+            lista.set(k, temp.get(i));
+            i++;
+            k++;
+        }
+
+        // Copia os elementos restantes da segunda metade, se houver
+        while (j <= fim - inicio) {
+            lista.set(k, temp.get(j));
+            j++;
+            k++;
+        }
     }
 }

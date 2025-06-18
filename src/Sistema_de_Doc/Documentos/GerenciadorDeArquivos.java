@@ -1,5 +1,7 @@
 package Sistema_de_Doc.Documentos;
 
+import Sistema_de_Doc.Estruturas.Ordenacao.*;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,10 +11,13 @@ import java.util.*;
 public class GerenciadorDeArquivos {
 
     private static final String DIRETORIO_BASE = "documentos/";
-    private List<Documento> documentos;
+    private static final String DIRETORIO_HUFF = "huff/";
+    private ArrayList<Documento> documentos;
+    private List<Documento> documentos2;
 
     public GerenciadorDeArquivos() {
         documentos = new ArrayList<>();
+        documentos2 = new ArrayList<>();
         Path path = Paths.get(DIRETORIO_BASE);
         if (!Files.exists(path)) {
             try {
@@ -21,33 +26,14 @@ public class GerenciadorDeArquivos {
                 System.err.println("Erro ao criar diretório base: " + e.getMessage());
             }
         }
-        // Carregar arquivos existentes
-        File diretorio = new File(DIRETORIO_BASE);
-        if (diretorio.exists() && diretorio.isDirectory()) {
-            File[] arquivos = diretorio.listFiles();
-            if (arquivos != null) {
-                for (File arquivo : arquivos) {
-                    if (arquivo.getName().endsWith(".txt")) {
-                        try {
-                            String nome = arquivo.getName().substring(0, arquivo.getName().length() - 4);
-                            String conteudo = Files.readString(arquivo.toPath());
-                            documentos.add(new Documento(nome, conteudo));
-                        } catch (IOException e) {
-                            System.err.println("Erro ao carregar arquivo " + arquivo.getName() + ": " + e.getMessage());
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public String salvarDocumento(Documento documento) {
-        documentos.add(documento); // Armazena em memória também
+        documentos2.add(documento); // Armazena em memória também
 
         String caminho = DIRETORIO_BASE + documento.getNome() + ".txt";
         try (FileWriter writer = new FileWriter(caminho)) {
             writer.write(documento.getConteudo());
-            System.out.println("Documento salvo com sucesso em: " + caminho);
             return caminho;
         } catch (IOException e) {
             System.err.println("Erro ao salvar o documento: " + e.getMessage());
@@ -55,115 +41,126 @@ public class GerenciadorDeArquivos {
         }
     }
 
+    public void carregarDocumentos(){
+        File doc1 = new File(DIRETORIO_BASE);
+        List<File> arquivos = null;
+        if (doc1.exists() && doc1.isDirectory()) {
+            arquivos = List.of(doc1.listFiles());
+        }
+        documentos.clear();
+        for (File arquivo : arquivos) {
+            try {
+                String nome = arquivo.getName();
+                String conteudo = Files.readString(arquivo.toPath());
+
+                documentos.add(new Documento(nome, conteudo));
+
+            } catch (IOException e) {
+                System.err.println("Erro ao ler o arquivo: " + arquivo.getName());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void carregarDocumentosHuff(){
+        File doc1 = new File(DIRETORIO_HUFF);
+        List<File> arquivos = null;
+        if (doc1.exists() && doc1.isDirectory()) {
+            arquivos = List.of(doc1.listFiles());
+        }
+        documentos.clear();
+        for (File arquivo : arquivos) {
+            String nome = arquivo.getName();
+            documentos.add(new Documento(nome));
+        }
+    }
+
     public String obterListaDocumentos() {
-        // Usar TreeSet para armazenar nomes em ordem alfabética e evitar duplicatas
-        TreeSet<String> nomesDocumentos = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-
-        // Obter documentos em disco
-        File diretorio = new File(DIRETORIO_BASE);
-        if (diretorio.exists() && diretorio.isDirectory()) {
-            File[] arquivos = diretorio.listFiles();
-            if (arquivos != null) {
-                for (File arquivo : arquivos) {
-                    String nome = arquivo.getName();
-                    if (nome.endsWith(".txt") || nome.endsWith(".huff")) {
-                        nome = nome.substring(0, nome.length() - 4); // Remove .txt
-                        nomesDocumentos.add(nome);
-                    }
-                }
-            }
-        }
-
-        // Adicionar documentos em memória
-        for (Documento doc : documentos) {
-            nomesDocumentos.add(doc.getNome());
-        }
-
-        // Construir a saída
+        File doc1 = new File(DIRETORIO_BASE);
         StringBuilder sb = new StringBuilder();
-        if (nomesDocumentos.isEmpty()) {
-            sb.append("Nenhum documento encontrado.\n");
-        } else {
-            for (String nome : nomesDocumentos) {
-                boolean emDisco = new File(DIRETORIO_BASE + nome + ".txt").exists();
-                boolean emMemoria = documentos.stream().anyMatch(doc -> doc.getNome().equalsIgnoreCase(nome));
 
-                sb.append("\nNome: ").append(nome);
-                if (emDisco && emMemoria) {
-                    sb.append(" (em disco e memória)");
-                } else if (emDisco) {
-                    sb.append(" (em disco)");
-                } else {
-                    sb.append(" (em memória)");
-                }
-                //sb.append("\n");
-            }
-        }
-
-        return sb.toString();
-    }
-
-    public void ordenarDocumentosPorNome() {
-        documentos.sort(Comparator.comparing(Documento::getNome, String.CASE_INSENSITIVE_ORDER));
-        // Exibir documentos em memória
-        System.out.println("Documentos em memória ordenados:");
-        if (documentos.isEmpty()) {
-            System.out.println("  Nenhum documento em memória.");
-        } else {
-            for (Documento doc : documentos) {
-                System.out.println("  Nome: " + doc.getNome());
-            }
-        }
-        // Obter e ordenar documentos em disco
-        TreeSet<String> nomesEmDisco = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-        File diretorio = new File(DIRETORIO_BASE);
-        if (diretorio.exists() && diretorio.isDirectory()) {
-            File[] arquivos = diretorio.listFiles();
+        if (doc1.exists() && doc1.isDirectory()) {
+            File[] arquivos = doc1.listFiles();            //obter documentos em disco
             if (arquivos != null) {
-                for (File arquivo : arquivos) {
-                    String nome = arquivo.getName();
-                    if (nome.endsWith(".txt") || nome.endsWith(".huff")) {
-                        nome = nome.substring(0, nome.lastIndexOf(".")); // Remove .txt ou .huff
-                        nomesEmDisco.add(nome);
-                    }
+                for (File temp : arquivos) {
+                    String nome = temp.getName();
+                    if (nome.endsWith(".txt")) nome = nome.substring(0, nome.length() - 4);  //pra remover o txt
+                    sb.append("Nome: ").append(nome).append("\n");
                 }
             }
-        }
+        }else return "\nNenhum documento encontrado.";
 
-        // Exibir documentos em disco
-        System.out.println("\nDocumentos em disco ordenados:");
-        if (nomesEmDisco.isEmpty()) {
-            System.out.println("  Nenhum documento em disco.");
-        } else {
-            for (String nome : nomesEmDisco) {
-                boolean ehTxt = new File(DIRETORIO_BASE + nome + ".txt").exists();
-                boolean ehHuff = new File(DIRETORIO_BASE + nome + ".huff").exists();
-                String tipo = ehTxt && ehHuff ? " (.txt e .huff)" : ehTxt ? " (.txt)" : " (.huff)";
-                System.out.println("  Nome: " + nome + tipo);
+        if (documentos2 == null || documentos2.isEmpty()) {
+            sb.append("Nenhum documento criado nesta sessão.");    //obter documentos em memoria
+        }
+        else {
+            sb.append("\n");
+            for (Documento doc2 : documentos2) {
+                sb.append("Documento criado nesta sessão: ").append(doc2.getNome()).append("\n");
             }
         }
-    }
-
-    public Documento buscarDocumento(String nome) {
-        for (Documento doc : documentos) {
-            if (doc.getNome().equalsIgnoreCase(nome)) {
-                return doc;
-            }
-        }
-        return null;
+        return sb.toString();
     }
 
     public String buscarPalavraEmDocumentos(String palavra) {
         StringBuilder resultado = new StringBuilder();
+        carregarDocumentos();
         for (Documento doc : documentos) {
             if (doc.getConteudo().toLowerCase().contains(palavra.toLowerCase())) {
+                resultado.setLength(0);
                 resultado.append("Encontrada em: ").append(doc.getNome()).append("\n");
             }
         }
         return resultado.length() > 0 ? resultado.toString() : "Palavra não encontrada em nenhum documento.";
     }
 
-    public List<Documento> getDocumentos() {
-        return documentos;
+    public void ordenarDocumentosPorNome() {
+        carregarDocumentos();
+        documentos.sort(Comparator.comparing(Documento::getNome));
+    }
+
+    public void ordenarPorHeap(){
+        carregarDocumentos();
+        documentos = HeapSort.heapSort(documentos);
+    }
+
+    public void ordenarPorMerge(){
+        carregarDocumentos();
+        documentos = MergeSort.mergeSort(documentos);
+    }
+
+    public void ordenarPorQuick(){
+        carregarDocumentos();
+        documentos = QuickSort.ordenarPorDataMaisRecente(documentos);
+    }
+
+    public void ordenarPorSelection(){
+        carregarDocumentos();
+        documentos = SelectionSort.selectionSort(documentos);
+    }
+
+    public Documento buscarDocumento(String nome, String tipo) {
+        if(tipo.equals(".txt")){
+            carregarDocumentos();
+        }else{
+            carregarDocumentosHuff();
+        }
+        for (Documento doc : documentos) {
+            if (doc.getNome().equalsIgnoreCase(nome + ".txt")) {
+                return doc;
+            }else if(doc.getNome().equalsIgnoreCase(nome + ".huff")){
+                return doc;
+            }
+        }
+        return null;
+    }
+
+    public StringBuilder getDocumentos() {
+        StringBuilder sb = new StringBuilder();
+        //carregarDocumentos();
+        for(Documento doc : documentos){
+            sb.append("Nome: ").append(doc.getNome()).append("\n");
+        }
+        return sb;
     }
 }
