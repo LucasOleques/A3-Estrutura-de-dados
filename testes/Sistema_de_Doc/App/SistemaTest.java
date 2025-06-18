@@ -11,7 +11,7 @@ public class SistemaTest {
         Sistema sistema = new Sistema();
         sistema.adicionarDocumento("doc1", "conteúdo do documento");
 
-        Documento doc = sistema.buscarDocumento("doc1");
+        Documento doc = sistema.buscarDocumento("doc1", ".txt");
         assertNotNull(doc);
         assertEquals("conteúdo do documento", doc.getConteudo());
     }
